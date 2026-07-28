@@ -39,8 +39,6 @@
 		<ProjectReference Include="..\Modules\Users\Users.Presentation\Users.Presentation.csproj" />
 		<ProjectReference Include="..\Modules\Authentication\Authentication.Infrastructure\Authentication.Infrastructure.csproj" />
 		<ProjectReference Include="..\Modules\Authentication\Authentication.Presentation\Authentication.Presentation.csproj" />
-		<ProjectReference Include="..\Modules\Shopping\Shopping.Infrastructure\Shopping.Infrastructure.csproj" />
-		<ProjectReference Include="..\Modules\Shopping\Shopping.Presentation\Shopping.Presentation.csproj" />
 	</ItemGroup>
 
 </Project>

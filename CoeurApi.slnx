@@ -26,18 +26,6 @@
     <Project Path="src/Modules/Authentication/Authentication.Infrastructure/Authentication.Infrastructure.csproj" />
     <Project Path="src/Modules/Authentication/Authentication.Presentation/Authentication.Presentation.csproj" />
   </Folder>
-  <Folder Name="/src/Modules/Shopping/">
-    <Project Path="src/Modules/Shopping/Shopping.Domain/Shopping.Domain.csproj" />
-    <Project Path="src/Modules/Shopping/Shopping.Application/Shopping.Application.csproj" />
-    <Project Path="src/Modules/Shopping/Shopping.Infrastructure/Shopping.Infrastructure.csproj" />
-    <Project Path="src/Modules/Shopping/Shopping.Presentation/Shopping.Presentation.csproj" />
-  </Folder>
-  <Folder Name="/src/Modules/Finances/">
-    <Project Path="src/Modules/Finances/Finances.Domain/Finances.Domain.csproj" Id="1b1f02bc-e3bd-4ea4-b7f0-b48b584705f1" />
-    <Project Path="src/Modules/Finances/Finances.Application/Finances.Application.csproj" />
-    <Project Path="src/Modules/Finances/Finances.Infrastructure/Finances.Infrastructure.csproj" />
-    <Project Path="src/Modules/Finances/Finances.Presentation/Finances.Presentation.csproj" />
-  </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/CoeurApi.Tests/CoeurApi.Tests.csproj" />
   </Folder>

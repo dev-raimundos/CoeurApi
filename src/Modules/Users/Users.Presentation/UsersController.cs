@@ -16,8 +16,7 @@ public class UsersController(
     DeleteUserUseCase deleteUser) : ControllerBase
 {
     [HttpPost]
-    public async Task<ActionResult<UserResponse>> Create([FromBody] CreateUserRequest request,
-        CancellationToken cancellationToken)
+    public async Task<ActionResult<UserResponse>> Create([FromBody] CreateUserRequest request, CancellationToken cancellationToken)
     {
         var user = await createUser.ExecuteAsync(request, cancellationToken);
         return Created($"api/v1/users/{user.Id}", user);

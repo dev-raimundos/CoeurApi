@@ -24,8 +24,6 @@
     <ProjectReference Include="..\..\src\Modules\Users\Users.Application\Users.Application.csproj" />
     <ProjectReference Include="..\..\src\Modules\Authentication\Authentication.Application\Authentication.Application.csproj" />
     <ProjectReference Include="..\..\src\Modules\Authentication\Authentication.Infrastructure\Authentication.Infrastructure.csproj" />
-    <ProjectReference Include="..\..\src\Modules\Shopping\Shopping.Domain\Shopping.Domain.csproj" />
-    <ProjectReference Include="..\..\src\Modules\Shopping\Shopping.Application\Shopping.Application.csproj" />
   </ItemGroup>
 
 </Project>
