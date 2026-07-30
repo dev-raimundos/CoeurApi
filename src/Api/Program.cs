@@ -5,7 +5,6 @@ using CoeurApi.Infrastructure;
 using CoeurApi.Infrastructure.Persistence;
 using Scalar.AspNetCore;
 using CoeurApi.Modules.Users.Infrastructure.Module;
-using CoeurApi.Modules.Shopping.Infrastructure.Module;
 using CoeurApi.Modules.Authentication.Infrastructure.Module;
 
 namespace CoeurApi.Api;
@@ -21,7 +20,6 @@ public static class Program
 
         builder.Services.AddUsersModule();
         builder.Services.AddAuthModule(builder.Configuration);
-        builder.Services.AddShoppingModule();
 
         builder.Services.AddApiServices(builder.Configuration);
 
