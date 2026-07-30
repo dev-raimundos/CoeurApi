@@ -18,7 +18,7 @@ services:
       start_period: 15s
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - ConnectionStrings__Default=${POSTGRES_CONNECTION:?POSTGRES_CONNECTION is required}
+      - ConnectionStrings__Default=${SQLSERVER_CONNECTION:?SQLSERVER_CONNECTION is required}
       - Jwt__Secret=${JWT__SECRET:?JWT__SECRET is required}
       - Jwt__Issuer=${JWT__ISSUER:-coeur-api}
       - Jwt__Audience=${JWT__AUDIENCE:-coeur-api}
