@@ -1,50 +1,24 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
-using CoeurApi.Modules.Authentication.Application.UseCases.Login;
-using CoeurApi.Modules.Authentication.Application.Settings;
-using Microsoft.AspNetCore.Routing;
+using CoeurApi.Modules.Authentication.Application.UseCases.GoogleLogin;
 
 namespace CoeurApi.Modules.Authentication.Presentation.Controller;
 
 [ApiController]
 [Route("api/v1/auth")]
-[Tags("Autenticação via Cookie JWT")]
-public class AuthController(LoginUseCase login, IOptions<JwtSettings> jwtSettings, IHostEnvironment environment) : ControllerBase
+[Tags("Autenticação via Google")]
+public class AuthController(GoogleLoginUseCase googleLogin) : ControllerBase
 {
-    [HttpPost("login")]
+    [HttpPost("google")]
     [AllowAnonymous]
     [EnableRateLimiting("login")]
 
-    [EndpointSummary("Login")]
-    [EndpointDescription("Realiza login do usuário e devolver um cookie jwt para autenticação.")]
-    public async Task<ActionResult<AuthResponse>> Login([FromBody] LoginRequest request, CancellationToken cancellationToken)
+    [EndpointSummary("Login com Google")]
+    [EndpointDescription("Valida o id_token do Google, cria a conta caso ainda não exista e devolve o token JWT da API.")]
+    public async Task<ActionResult<AuthResponse>> Google([FromBody] GoogleLoginRequest request, CancellationToken cancellationToken)
     {
-        var result = await login.ExecuteAsync(request, cancellationToken);
-        var response = result.Response;
-        var token = result.Token;
-
-        Response.Cookies.Append("access_token", token, new CookieOptions
-        {
-            HttpOnly = true,
-            Secure = environment.IsProduction(),
-            SameSite = SameSiteMode.Strict,
-            Expires = DateTimeOffset.UtcNow.AddHours(jwtSettings.Value.ExpirationHours)
-        });
-
+        var response = await googleLogin.ExecuteAsync(request, cancellationToken);
         return Ok(response);
-    }
-
-    [HttpPost("logout")]
-    [AllowAnonymous]
-
-    [EndpointSummary("Logout")]
-    [EndpointDescription("Revoga cookie de login e faz logout do usuário.")]
-    public ActionResult Logout()
-    {
-        Response.Cookies.Delete("access_token");
-        return NoContent();
     }
 }

@@ -7,7 +7,7 @@ public class User
     public Guid Id { get; private set; }
     public string Name { get; private set; } = null!;
     public string Email { get; private set; } = null!;
-    public string PasswordHash { get; private set; } = null!;
+    public string? PasswordHash { get; private set; }
     public UserRole Role { get; private set; }
     public bool IsActive { get; private set; }
     public bool IsEmailVerified { get; private set; }
@@ -32,6 +32,22 @@ public class User
             Role = UserRole.User,
             IsActive = true,
             IsEmailVerified = false,
+            FailedLoginAttempts = 0,
+            CreatedAt = DateTime.UtcNow
+        };
+    }
+
+    public static User CreateFromGoogle(string name, string email)
+    {
+        return new User
+        {
+            Id = Guid.NewGuid(),
+            Name = name,
+            Email = email.ToLowerInvariant(),
+            PasswordHash = null,
+            Role = UserRole.User,
+            IsActive = true,
+            IsEmailVerified = true,
             FailedLoginAttempts = 0,
             CreatedAt = DateTime.UtcNow
         };
