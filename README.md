@@ -102,8 +102,7 @@ coeur-api/
 │
 ├── coeur-api.slnx
 ├── docker-compose.dcproj
-├── docker-compose.yml
-└── docker-compose.override.yml
+└── docker-compose.yml
 ```
 
 ### Anatomia de um módulo
@@ -327,7 +326,7 @@ O Dockerfile utiliza multi-stage build — a imagem de produção parte da image
 
 Em produção, a API é exposta via **Nginx Proxy Manager** na rede Docker interna, sem expor portas diretamente no host.
 
-Build e deploy são feitos pelo Compose gerado pelo Visual Studio (`docker-compose.dcproj`, `docker-compose.yml` + `docker-compose.override.yml`) — via o profile "Docker Compose" do VS, ou diretamente pela CLI:
+Docker é usado só em produção (sem arquivo de override local) — o Compose gerado pelo Visual Studio (`docker-compose.dcproj`, `docker-compose.yml`) é rodado direto pela CLI no servidor:
 
 ### Build e deploy
 

@@ -29,7 +29,7 @@ dotnet ef migrations list --project src/Infrastructure --startup-project src/Api
 dotnet ef migrations remove --project src/Infrastructure --startup-project src/Api
 ```
 
-Docker/production, via the Visual Studio-generated Compose project (`docker-compose.dcproj`, `docker-compose.yml` + `docker-compose.override.yml`) — run through Visual Studio's "Docker Compose" launch profile, or directly with the CLI:
+Docker is production-only (no local override file) — the Visual Studio-generated Compose project (`docker-compose.dcproj`, `docker-compose.yml`) is run directly with the CLI on the server:
 
 ```bash
 docker compose build              # build the image
