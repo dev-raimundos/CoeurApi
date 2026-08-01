@@ -10,7 +10,7 @@ USER $APP_UID
 
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS restore
 WORKDIR /src
-COPY ["coeur-api.slnx", "./"]
+COPY ["CoeurApi.slnx", "./"]
 COPY ["src/SharedKernel/SharedKernel.csproj", "src/SharedKernel/"]
 COPY ["src/Application/Application.csproj", "src/Application/"]
 COPY ["src/Infrastructure/Infrastructure.csproj", "src/Infrastructure/"]
