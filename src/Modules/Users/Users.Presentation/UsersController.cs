@@ -4,6 +4,7 @@ using CoeurApi.Modules.Users.Application.UseCases.Create;
 using CoeurApi.Modules.Users.Application.UseCases.Delete;
 using CoeurApi.Modules.Users.Application.UseCases.GetById;
 using CoeurApi.Modules.Users.Application.UseCases.Update;
+using Microsoft.AspNetCore.Routing;
 
 namespace CoeurApi.Modules.Users.Presentation;
 
@@ -16,6 +17,8 @@ public class UsersController(
     DeleteUserUseCase deleteUser) : ControllerBase
 {
     [HttpPost]
+    [EndpointSummary("Cria um Usuário")]
+    [EndpointDescription("Criação de um usuário dado email, nome e senha.")]
     public async Task<ActionResult<UserResponse>> Create([FromBody] CreateUserRequest request, CancellationToken cancellationToken)
     {
         var user = await createUser.ExecuteAsync(request, cancellationToken);
@@ -23,6 +26,8 @@ public class UsersController(
     }
 
     [HttpGet("{id:guid}")]
+    [EndpointSummary("Encontra um Usuário")]
+    [EndpointDescription("Retorna um usuário identificado pelo ID")]
     [ProducesResponseType<UserResponse>(StatusCodes.Status200OK)]
     public async Task<ActionResult<UserResponse>> GetById(Guid id, CancellationToken cancellationToken)
     {
@@ -31,6 +36,8 @@ public class UsersController(
     }
 
     [HttpPut("{id:guid}")]
+    [EndpointSummary("Edita um Usuário")]
+    [EndpointDescription("Atualiza um usuário identificado pelo ID")]
     [ProducesResponseType<UserResponse>(StatusCodes.Status200OK)]
     public async Task<ActionResult<UserResponse>> Update(Guid id, [FromBody] UpdateUserRequest request,
         CancellationToken cancellationToken)
@@ -40,6 +47,8 @@ public class UsersController(
     }
 
     [HttpDelete("{id:guid}")]
+    [EndpointSummary("Deleta um Usuário")]
+    [EndpointDescription("Exclui um usuário identificado pelo ID")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
