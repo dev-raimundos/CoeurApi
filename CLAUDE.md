@@ -8,7 +8,7 @@ Respond in Brazilian Portuguese (pt-BR). Commit messages and code comments must 
 
 ## Stack
 
-ASP.NET Core 10 (C# 14) REST API, EF Core 10 targeting **SQL Server** (`Microsoft.EntityFrameworkCore.SqlServer` + `UseSqlServer`). JWT auth via HTTP-only cookie (`access_token`), BCrypt.Net-Next for password hashing, FluentValidation for input validation, Scalar for OpenAPI docs.
+ASP.NET Core 10 (C# 14) REST API, EF Core 10 targeting **SQL Server** (`Microsoft.EntityFrameworkCore.SqlServer` + `UseSqlServer`). JWT auth via bearer token in the `Authorization` header (returned in the login response body), BCrypt.Net-Next for password hashing, FluentValidation for input validation, Scalar for OpenAPI docs.
 
 > **Note:** `.github/copilot-instructions.md` predates the multi-project module split (it still describes an `App/Core`/`App/Shared`/`App/Modules` folder layout instead of `src/Modules/<Module>/<Module>.<Layer>`) and claims a `snake_case` naming convention (`UseSnakeCaseNamingConvention`) that isn't actually configured — columns use EF Core's default naming; only table/schema names are set explicitly per module. Its mention of PostgreSQL/Npgsql as the database is accurate again now that the project has moved back from SQL Server. `README.md` was updated alongside this file and reflects the current architecture; trust the code (`DependencyInjection.cs`, `.env.example`, `docker-compose.yml`) over `copilot-instructions.md` for connection/database and naming details.
 
@@ -111,11 +111,13 @@ src/
         │   │                     # per use case they inject alongside a `using` for the group's shared
         │   │                     # namespace (for the Response type). Response records keep a static
         │   │                     # FromEntity(...) mapper.
-        │   └── Settings/        # Config POCOs a Presentation controller also needs to read directly
-        │                        # (e.g. Authentication's JwtSettings, read by AuthController for the
-        │                        # cookie expiration) — lives here, not in Infrastructure, specifically
-        │                        # so Presentation doesn't need a reference to Infrastructure just to
-        │                        # see a plain settings class.
+        │   └── Settings/        # Config POCOs a Presentation controller may need to read directly
+        │                        # (e.g. Authentication's JwtSettings, used today by
+        │                        # Authentication.Infrastructure's TokenService/AuthModule to
+        │                        # sign/validate tokens) — lives here, not in Infrastructure,
+        │                        # specifically so a Presentation controller could read it too
+        │                        # without needing a reference to Infrastructure just to see a
+        │                        # plain settings class.
         ├── <Module>.Infrastructure/<Module>.Infrastructure.csproj   # → <Module>.Application only
         │   │                    # (Domain arrives transitively). Repository implementations depend
         │   │                    # on the generic EF Core `DbContext` base type + `Set<T>()`, never the
@@ -199,7 +201,7 @@ No XML doc comments (`<GenerateDocumentationFile>` is off) and no third-party Sw
 
 ## Auth
 
-JWT stored in an HTTP-only cookie (`access_token`), read out in `AddJwtBearer().Events.OnMessageReceived` rather than the `Authorization` header — so there is no bearer-token handling on the client. This bearer scheme is wired inside `src/Modules/Authentication/Authentication.Infrastructure/AuthModule.cs`, which also configures the concrete `TokenService` (`Authentication.Infrastructure/Security/`) behind the `ITokenService` port that `LoginService` (`Authentication.Application`) depends on — Authentication is the only module that touches JWT internals. `JwtSettings` (`Authentication.Application/Settings/`) is a plain config POCO, not an Infrastructure concern, specifically so `AuthController` (`Authentication.Presentation`) can read `ExpirationHours` for the cookie without needing a reference to `Authentication.Infrastructure`. Every controller requires auth by default (global `AuthorizeFilter`); use `[AllowAnonymous]` to opt out (e.g. login, user creation). `ICurrentUser` (`src/Application/Abstractions/`) / `CurrentUserService` (`src/Infrastructure/Authentication/`) exposes the authenticated user's id/email/name/role for ownership checks inside services (see the `id != currentUser.Id && !currentUser.IsAdmin` pattern in `GetUserByIdService`/`UpdateUserService`/`DeleteUserService`). No refresh tokens — expired token means re-login.
+`POST /api/v1/auth/login` (`AuthController`, `[AllowAnonymous]`) returns the JWT in the response body (`AuthResponse.Token`) — not a cookie. `AuthModule.AddAuthModule()` (`src/Modules/Authentication/Authentication.Infrastructure/AuthModule.cs`) wires a plain `AddJwtBearer()` scheme with no `Events.OnMessageReceived` override, so `JwtBearerHandler` falls back to its default: reading the token from the `Authorization: Bearer <token>` header. The client is responsible for storing the token and attaching that header on every subsequent request. `AuthModule` also configures the concrete `TokenService` (`Authentication.Infrastructure/Security/`) behind the `ITokenService` port that `LoginUseCase` (`Authentication.Application/UseCases/Login/`) depends on — Authentication is the only module that touches JWT internals. `JwtSettings` (`Authentication.Application/Settings/`) is a plain config POCO read by `TokenService` (to sign the token) and `AuthModule` (to build `TokenValidationParameters`); no `Authentication.Presentation` controller reads it directly today. Every controller requires auth by default (global `AuthorizeFilter`); use `[AllowAnonymous]` to opt out (e.g. login, user creation). `ICurrentUser` (`src/Application/Abstractions/`) / `CurrentUserService` (`src/Infrastructure/Authentication/`) exposes the authenticated user's id/email/name/role for ownership checks inside use cases (see the `id != currentUser.Id && !currentUser.IsAdmin` pattern in `GetUserByIdUseCase`/`UpdateUserUseCase`/`DeleteUserUseCase`). No refresh tokens — expired token means re-login.
 
 ## API routes
 

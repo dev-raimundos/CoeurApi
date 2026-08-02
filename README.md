@@ -14,7 +14,7 @@ O projeto foi construído com foco em clareza de código, convenções consisten
 | ASP.NET Core | 10 | Framework web |
 | PostgreSQL | 17 | Banco de dados |
 | Entity Framework Core | 10 | ORM (`Npgsql.EntityFrameworkCore.PostgreSQL`) |
-| JWT (HTTP-only cookie) | — | Autenticação |
+| JWT (bearer token) | — | Autenticação |
 | BCrypt.Net-Next | — | Hash de senhas |
 | FluentValidation | — | Validação de entrada |
 | Scalar | — | Documentação interativa (OpenAPI) |
@@ -209,9 +209,9 @@ throw HttpException.Forbidden("Acesso negado.");
 
 ### Autenticação
 
-JWT armazenado em **cookie HTTP-only** (`access_token`), lido em `AddJwtBearer().Events.OnMessageReceived` em vez do header `Authorization` — não há lógica de bearer token no client. O esquema JWT é configurado em `src/Modules/Authentication/Authentication.Infrastructure/AuthModule.cs`, que também registra o `TokenService` concreto (`Authentication.Infrastructure/Security/`) atrás da porta `ITokenService` da qual o `LoginService` (`Authentication.Application`) depende — é o único módulo que conhece os internals de JWT. `JwtSettings` (`Authentication.Application/Settings/`) é um POCO de configuração puro, não uma preocupação de Infrastructure, justamente pra o `AuthController` (`Authentication.Presentation`) poder ler `ExpirationHours` pro cookie sem precisar de referência a `Authentication.Infrastructure`.
+`POST /api/v1/auth/login` (`AuthController`, `[AllowAnonymous]`) devolve o JWT no corpo da resposta (`AuthResponse.Token`) — não em cookie. `AuthModule.AddAuthModule()` (`src/Modules/Authentication/Authentication.Infrastructure/AuthModule.cs`) configura um `AddJwtBearer()` simples, sem `Events.OnMessageReceived`, então o `JwtBearerHandler` usa o comportamento padrão: lê o token do header `Authorization: Bearer <token>`. Cabe ao client guardar o token e enviar esse header em toda requisição autenticada. O `AuthModule` também registra o `TokenService` concreto (`Authentication.Infrastructure/Security/`) atrás da porta `ITokenService` da qual o `LoginUseCase` (`Authentication.Application/UseCases/Login/`) depende — é o único módulo que conhece os internals de JWT. `JwtSettings` (`Authentication.Application/Settings/`) é um POCO de configuração puro, lido pelo `TokenService` (pra assinar o token) e pelo `AuthModule` (pra montar o `TokenValidationParameters`); hoje nenhum controller de `Authentication.Presentation` o lê diretamente.
 
-Todo controller exige autenticação por padrão (`AuthorizeFilter` global); use `[AllowAnonymous]` para abrir exceção (login, criação de usuário). `ICurrentUser`/`CurrentUserService` expõe id/email/nome/role do usuário autenticado para checagens de ownership dentro dos services (padrão `id != currentUser.Id && !currentUser.IsAdmin` em `GetUserByIdService`/`UpdateUserService`/`DeleteUserService`).
+Todo controller exige autenticação por padrão (`AuthorizeFilter` global); use `[AllowAnonymous]` para abrir exceção (login, criação de usuário). `ICurrentUser`/`CurrentUserService` expõe id/email/nome/role do usuário autenticado para checagens de ownership dentro dos use cases (padrão `id != currentUser.Id && !currentUser.IsAdmin` em `GetUserByIdUseCase`/`UpdateUserUseCase`/`DeleteUserUseCase`).
 
 O token expira em 24 horas. Não há refresh token — ao expirar, o usuário precisa fazer login novamente.
 
