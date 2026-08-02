@@ -10,12 +10,20 @@ public class FluentValidationFilter(IServiceProvider serviceProvider) : IAsyncAc
     {
         foreach (var argument in context.ActionArguments.Values)
         {
-            if (argument is null) continue;
+            if (argument is null)
+            {
+                continue;
+            }
 
             var validatorType = typeof(IValidator<>).MakeGenericType(argument.GetType());
-            if (serviceProvider.GetService(validatorType) is not IValidator validator) continue;
+
+            if (serviceProvider.GetService(validatorType) is not IValidator validator)
+            {
+                continue;
+            }
 
             var validationContext = new ValidationContext<object>(argument);
+
             var result = await validator.ValidateAsync(validationContext);
 
             if (!result.IsValid)
