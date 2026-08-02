@@ -3,7 +3,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using CoeurApi.Modules.Authentication.Application.Abstractions;
-using CoeurApi.Modules.Authentication.Application.UseCases.GoogleLogin;
+using CoeurApi.Modules.Authentication.Application.UseCases.Login;
 using CoeurApi.Modules.Authentication.Application.Settings;
 using CoeurApi.Modules.Authentication.Infrastructure.Security;
 
@@ -14,13 +14,11 @@ public static class AuthModule
     public static IServiceCollection AddAuthModule(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<JwtSettings>(configuration.GetSection("Jwt"));
-        services.Configure<GoogleSettings>(configuration.GetSection("Google"));
         var jwtSettings = configuration.GetSection("Jwt").Get<JwtSettings>()!;
 
         services.AddScoped<ITokenService, TokenService>();
-        services.AddScoped<IGoogleTokenValidator, GoogleTokenValidator>();
-        services.AddScoped<GoogleLoginUseCase>();
-        services.AddValidatorsFromAssemblyContaining<GoogleLoginValidator>();
+        services.AddScoped<LoginUseCase>();
+        services.AddValidatorsFromAssemblyContaining<LoginValidator>();
 
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>

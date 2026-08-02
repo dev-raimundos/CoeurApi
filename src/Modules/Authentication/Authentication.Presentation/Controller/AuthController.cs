@@ -1,24 +1,24 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
-using CoeurApi.Modules.Authentication.Application.UseCases.GoogleLogin;
+using CoeurApi.Modules.Authentication.Application.UseCases.Login;
 
 namespace CoeurApi.Modules.Authentication.Presentation.Controller;
 
 [ApiController]
 [Route("api/v1/auth")]
-[Tags("Autenticação via Google")]
-public class AuthController(GoogleLoginUseCase googleLogin) : ControllerBase
+[Tags("Autenticação")]
+public class AuthController(LoginUseCase login) : ControllerBase
 {
-    [HttpPost("google")]
+    [HttpPost("login")]
     [AllowAnonymous]
     [EnableRateLimiting("login")]
 
-    [EndpointSummary("Login com Google")]
-    [EndpointDescription("Valida o id_token do Google, cria a conta caso ainda não exista e devolve o token JWT da API.")]
-    public async Task<ActionResult<AuthResponse>> Google([FromBody] GoogleLoginRequest request, CancellationToken cancellationToken)
+    [EndpointSummary("Login com email e senha")]
+    [EndpointDescription("Valida as credenciais e devolve o token JWT da API.")]
+    public async Task<ActionResult<AuthResponse>> Login([FromBody] LoginRequest request, CancellationToken cancellationToken)
     {
-        var response = await googleLogin.ExecuteAsync(request, cancellationToken);
+        var response = await login.ExecuteAsync(request, cancellationToken);
         return Ok(response);
     }
 }

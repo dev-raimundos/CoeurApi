@@ -37,22 +37,6 @@ public class User
         };
     }
 
-    public static User CreateFromGoogle(string name, string email)
-    {
-        return new User
-        {
-            Id = Guid.NewGuid(),
-            Name = name,
-            Email = email.ToLowerInvariant(),
-            PasswordHash = null,
-            Role = UserRole.User,
-            IsActive = true,
-            IsEmailVerified = true,
-            FailedLoginAttempts = 0,
-            CreatedAt = DateTime.UtcNow
-        };
-    }
-
     public void UpdateProfile(string name)
     {
         Name = name;
