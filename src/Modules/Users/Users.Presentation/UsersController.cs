@@ -1,9 +1,12 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using CoeurApi.Modules.Users.Application.UseCases;
 using CoeurApi.Modules.Users.Application.UseCases.Create;
 using CoeurApi.Modules.Users.Application.UseCases.Delete;
+using CoeurApi.Modules.Users.Application.UseCases.GetAll;
 using CoeurApi.Modules.Users.Application.UseCases.GetById;
 using CoeurApi.Modules.Users.Application.UseCases.Update;
+using CoeurApi.SharedKernel.Common;
 using Microsoft.AspNetCore.Routing;
 
 namespace CoeurApi.Modules.Users.Presentation;
@@ -12,10 +15,28 @@ namespace CoeurApi.Modules.Users.Presentation;
 [Route("api/v1/users")]
 public class UsersController(
     CreateUserUseCase createUser,
+    GetAllUsersUseCase getAllUsers,
     GetUserByIdUseCase getUserById,
     UpdateUserUseCase updateUser,
     DeleteUserUseCase deleteUser) : ControllerBase
 {
+    [HttpGet]
+    [Authorize(Roles = "Admin")]
+    [EndpointSummary("Lista Usuários")]
+    [EndpointDescription("Retorna uma lista paginada de usuários.")]
+    [ProducesResponseType<PagedResult<UserResponse>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status403Forbidden)]
+    public async Task<ActionResult<PagedResult<UserResponse>>> GetAll(
+        [FromQuery] int? page,
+        [FromQuery] int? pageSize,
+        CancellationToken cancellationToken)
+    {
+        var (normalizedPage, normalizedPageSize) = Pagination.Normalize(page, pageSize);
+        var users = await getAllUsers.ExecuteAsync(normalizedPage, normalizedPageSize, cancellationToken);
+        return Ok(users);
+    }
+
     [HttpPost]
     [EndpointSummary("Cria um Usuário")]
     [EndpointDescription("Criação de um usuário dado email, nome e senha.")]

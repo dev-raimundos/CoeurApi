@@ -2,6 +2,7 @@ using FluentValidation;
 using CoeurApi.Modules.Users.Application.Abstractions;
 using CoeurApi.Modules.Users.Application.UseCases.Create;
 using CoeurApi.Modules.Users.Application.UseCases.Delete;
+using CoeurApi.Modules.Users.Application.UseCases.GetAll;
 using CoeurApi.Modules.Users.Application.UseCases.GetById;
 using CoeurApi.Modules.Users.Application.UseCases.Update;
 using CoeurApi.Modules.Users.Infrastructure.Repository;
@@ -14,6 +15,7 @@ public static class UsersModule
     {
         services.AddScoped<IUsersRepository, UsersRepository>();
         services.AddScoped<CreateUserUseCase>();
+        services.AddScoped<GetAllUsersUseCase>();
         services.AddScoped<GetUserByIdUseCase>();
         services.AddScoped<UpdateUserUseCase>();
         services.AddScoped<DeleteUserUseCase>();

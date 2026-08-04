@@ -6,6 +6,19 @@ namespace CoeurApi.Modules.Users.Infrastructure.Repository;
 
 public class UsersRepository(DbContext context) : IUsersRepository
 {
+    public async Task<(List<User> Items, int TotalCount)> GetAllAsync(int page, int pageSize, CancellationToken cancellationToken = default)
+    {
+        var query = context.Set<User>()
+            .OrderBy(u => u.Name)
+            .ThenBy(u => u.Id);
+
+        var totalCount = await query.CountAsync(cancellationToken);
+
+        var items = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync(cancellationToken);
+
+        return (items, totalCount);
+    }
+
     public async Task<User?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         => await context.Set<User>().FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
 

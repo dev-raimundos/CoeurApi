@@ -6,10 +6,7 @@ using CoeurApi.SharedKernel.Exceptions;
 
 namespace CoeurApi.Modules.Authentication.Application.UseCases.Login;
 
-public class LoginUseCase(
-    IUsersRepository repository,
-    ITokenService tokenService,
-    IUnitOfWork unitOfWork)
+public class LoginUseCase(IUsersRepository repository, ITokenService tokenService, IUnitOfWork unitOfWork)
 {
     private const string ErrInvalidCredentials = "Email ou senha inválidos.";
     private const string ErrAccountLocked = "Conta temporariamente bloqueada por excesso de tentativas. Tente novamente mais tarde.";
