@@ -21,7 +21,6 @@ public class UsersController(
     DeleteUserUseCase deleteUser) : ControllerBase
 {
     [HttpGet]
-    [Authorize(Roles = "Admin")]
     [EndpointSummary("Lista Usuários")]
     [EndpointDescription("Retorna uma lista paginada de usuários.")]
     [ProducesResponseType<PagedResult<UserResponse>>(StatusCodes.Status200OK)]
@@ -33,7 +32,11 @@ public class UsersController(
         CancellationToken cancellationToken)
     {
         var (normalizedPage, normalizedPageSize) = Pagination.Normalize(page, pageSize);
-        var users = await getAllUsers.ExecuteAsync(normalizedPage, normalizedPageSize, cancellationToken);
+        var users = await getAllUsers.ExecuteAsync(
+            normalizedPage,
+            normalizedPageSize,
+            cancellationToken
+        );
         return Ok(users);
     }
 
