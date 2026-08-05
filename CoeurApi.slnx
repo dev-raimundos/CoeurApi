@@ -26,10 +26,8 @@
     <Project Path="src/Modules/Authentication/Authentication.Infrastructure/Authentication.Infrastructure.csproj" />
     <Project Path="src/Modules/Authentication/Authentication.Presentation/Authentication.Presentation.csproj" />
   </Folder>
-  <Folder Name="/tests/">
-    <Project Path="tests/CoeurApi.Tests/CoeurApi.Tests.csproj" />
-  </Folder>
   <Project Path="docker-compose.dcproj">
     <Build />
   </Project>
+  <Project Path="CoeurApi.Tests/CoeurApi.Tests.csproj" />
 </Solution>

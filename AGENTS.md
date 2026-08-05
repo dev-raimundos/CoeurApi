@@ -18,7 +18,7 @@ ASP.NET Core 10 (C# 14) REST API, EF Core 10 targeting **PostgreSQL 17** (`Npgsq
 dotnet restore                          # restore dependencies
 dotnet run                              # run locally (https://localhost:7209, http://localhost:5148)
 dotnet build                            # build
-dotnet test                             # run the test project (tests/CoeurApi.Tests)
+dotnet test                             # run the test project (CoeurApi.Tests)
 ```
 
 Migrations (applied automatically on startup via `MigrateAsync()` in `Program.cs` — no manual step needed in prod). The `DbContext` lives in `src/Infrastructure` but the composition root (and `Microsoft.EntityFrameworkCore.Design`) is `src/Api`, so EF Core tooling always needs both flags:
@@ -40,7 +40,7 @@ docker compose exec api /bin/sh   # shell into the api container
 docker compose down               # tear down the stack
 ```
 
-Tests live in `tests/CoeurApi.Tests` (xUnit + Moq), a separate project referencing the specific layer projects it exercises (`Users.Domain`/`Users.Application`, `Authentication.Application`/`Authentication.Infrastructure`, `Shopping.Domain`/`Shopping.Application`) via `ProjectReference` — it lives outside `src/`, so it never gets pulled into any module's or the host's build, and test dependencies never ship in the production artifact.
+Tests live in `CoeurApi.Tests` (xUnit + Moq), a separate project referencing the specific layer projects it exercises (`Users.Domain`/`Users.Application`, `Authentication.Application`/`Authentication.Infrastructure`, `Shopping.Domain`/`Shopping.Application`) via `ProjectReference` — it lives outside `src/`, so it never gets pulled into any module's or the host's build, and test dependencies never ship in the production artifact.
 
 ## Local setup
 

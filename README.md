@@ -312,7 +312,7 @@ A documentação interativa (Scalar) estará disponível em:
 
 ## Testes
 
-Os testes ficam em `tests/CoeurApi.Tests`, um projeto xUnit + Moq separado dos módulos — vive fora de `src/`, então nunca é puxado para o build de nenhum módulo ou do host, e as dependências de teste nunca vão pro artefato de produção. Referencia as camadas específicas que exercita via `ProjectReference` (`Users.Domain`/`Users.Application`, `Authentication.Application`/`Authentication.Infrastructure`, `Shopping.Domain`/`Shopping.Application`).
+Os testes ficam em `CoeurApi.Tests`, um projeto xUnit + Moq separado dos módulos — vive fora de `src/`, então nunca é puxado para o build de nenhum módulo ou do host, e as dependências de teste nunca vão pro artefato de produção. Referencia as camadas específicas que exercita via `ProjectReference` (`Users.Domain`/`Users.Application`, `Authentication.Application`/`Authentication.Infrastructure`, `Shopping.Domain`/`Shopping.Application`).
 
 ```bash
 dotnet test
