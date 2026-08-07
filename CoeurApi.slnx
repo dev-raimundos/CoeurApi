@@ -14,6 +14,7 @@
     <Project Path="src/Infrastructure/Infrastructure.csproj" />
     <Project Path="src/Api/Api.csproj" />
   </Folder>
+  <Folder Name="/src/Modules/CartWise/" />
   <Folder Name="/src/Modules/Users/">
     <Project Path="src/Modules/Users/Users.Domain/Users.Domain.csproj" />
     <Project Path="src/Modules/Users/Users.Application/Users.Application.csproj" />
