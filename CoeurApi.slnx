@@ -29,5 +29,7 @@
   <Project Path="docker-compose.dcproj">
     <Build />
   </Project>
-  <Project Path="CoeurApi.Tests/CoeurApi.Tests.csproj" />
+  <Folder Name="/Tests/">
+    <Project Path="CoeurApi.Tests/CoeurApi.Tests.csproj" />
+  </Folder>
 </Solution>

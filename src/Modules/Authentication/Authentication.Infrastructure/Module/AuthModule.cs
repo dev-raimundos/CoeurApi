@@ -20,8 +20,8 @@ public static class AuthModule
         services.AddScoped<LoginUseCase>();
         services.AddValidatorsFromAssemblyContaining<LoginValidator>();
 
-        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(options =>
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
+            options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
