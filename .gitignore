@@ -1,0 +1,24 @@
+# build
+bin/
+obj/
+
+# user secrets e configs locais
+appsettings.Development.json
+secrets.json
+
+# env
+.env
+
+# rider / vscode / visual studio
+.idea/
+.vscode/
+*.user
+*.suo
+.vs/
+
+# os
+.DS_Store
+Thumbs.db
+
+# logs
+*.log
