@@ -15,7 +15,7 @@
     <Project Path="src/SharedKernel/SharedKernel.csproj" />
   </Folder>
   <Folder Name="/src/Modules/Shopping/">
-    <Project Path="C:/Users/devra/Projects/Shopping.Presentation/Shopping.Presentation.csproj" Id="6ac49ea9-24ce-4ee2-ac44-157dc9ab2ce2" />
+    <Project Path="src/Modules/Shopping/Shopping.Presentation/Shopping.Presentation.csproj" Id="6ac49ea9-24ce-4ee2-ac44-157dc9ab2ce2" />
     <Project Path="src/Modules/Shopping/Shopping.Application/Shopping.Application.csproj" Id="3179f691-0206-45b3-8679-b9546cacd799" />
     <Project Path="src/Modules/Shopping/Shopping.Domain/Shopping.Domain.csproj" Id="fc14dd20-d8b5-4bf2-b126-9f553d278185" />
     <Project Path="src/Modules/Shopping/Shopping.Infrastructure/Shopping.Infrastructure.csproj" Id="cf120c3d-b275-447d-b93d-e09d2cec4c11" />
