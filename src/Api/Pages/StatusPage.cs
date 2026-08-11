@@ -4,8 +4,8 @@ public static class StatusPage
 {
     public static string Render(IWebHostEnvironment env)
     {
-        var scalarLink = env.IsDevelopment()
-            ? """<a class="docs-link" href="/scalar/v1">API Reference →</a>"""
+        var swaggerLink = env.IsDevelopment()
+            ? """<a class="docs-link" href="/swagger">API Reference →</a>"""
             : "";
 
         return $$"""
@@ -138,7 +138,7 @@ public static class StatusPage
                             <span class="status-text">online</span>
                         </div>
                     </div>
-                    {{scalarLink}}
+                    {{swaggerLink}}
                 </div>
             </body>
             </html>

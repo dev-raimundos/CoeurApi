@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi;
 using CoeurApi.Api.Extensions;
 using CoeurApi.Api.Pages;
 using CoeurApi.Infrastructure;
 using CoeurApi.Infrastructure.Persistence;
-using Scalar.AspNetCore;
 using CoeurApi.Modules.Users.Infrastructure.Module;
 using CoeurApi.Modules.Authentication.Infrastructure.Module;
 
@@ -16,7 +16,24 @@ public static class Program
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Services.AddInfrastructure(builder.Configuration);
-        builder.Services.AddOpenApi();
+
+        builder.Services.AddSwaggerGen(options =>
+        {
+            options.SwaggerDoc("v1", new OpenApiInfo { Title = "Coeur API", Version = "v1" });
+
+            options.AddSecurityDefinition("bearer", new OpenApiSecurityScheme
+            {
+                Type = SecuritySchemeType.Http,
+                Scheme = "bearer",
+                BearerFormat = "JWT",
+                Description = "Informe apenas o token JWT retornado pelo login (sem o prefixo \"Bearer\")."
+            });
+
+            options.AddSecurityRequirement(document => new OpenApiSecurityRequirement
+            {
+                [new OpenApiSecuritySchemeReference("bearer", document)] = []
+            });
+        });
 
         builder.Services.AddUsersModule();
         builder.Services.AddAuthModule(builder.Configuration);
@@ -38,9 +55,11 @@ public static class Program
 
         if (app.Environment.IsDevelopment())
         {
-            app.MapOpenApi();
-            app.MapScalarApiReference();
-            app.MapGet("/scalar", () => Results.Redirect("/scalar/v1"));
+            app.UseSwagger();
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "Coeur API v1");
+            });
         }
 
         app.MapGet("/", (IWebHostEnvironment env) =>

@@ -17,7 +17,7 @@ O projeto foi construído com foco em clareza de código, convenções consisten
 | JWT (bearer token) | — | Autenticação |
 | BCrypt.Net-Next | — | Hash de senhas |
 | FluentValidation | — | Validação de entrada |
-| Scalar | — | Documentação interativa (OpenAPI) |
+| Swagger (Swashbuckle) | — | Documentação interativa (OpenAPI) |
 | xUnit + Moq | — | Testes |
 
 ---
@@ -304,9 +304,9 @@ A API estará disponível em:
 - `https://localhost:7209`
 - `http://localhost:5148`
 
-A documentação interativa (Scalar) estará disponível em:
+A documentação interativa (Swagger) estará disponível em:
 
-- `https://localhost:7209/scalar/v1`
+- `https://localhost:7209/swagger`
 
 ---
 
