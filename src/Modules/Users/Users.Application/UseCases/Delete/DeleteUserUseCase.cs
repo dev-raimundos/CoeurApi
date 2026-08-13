@@ -14,7 +14,8 @@ public class DeleteUserUseCase(IUsersRepository repository, IUnitOfWork unitOfWo
         if (id != currentUser.Id && !currentUser.IsAdmin)
             throw HttpException.Forbidden();
 
-        var user = await repository.GetByIdAsync(id, cancellationToken) ?? throw HttpException.NotFound(ErrNotFound);
+        var user = await repository.GetByIdAsync(id, cancellationToken) 
+            ?? throw HttpException.NotFound(ErrNotFound);
 
         repository.Delete(user);
         await unitOfWork.SaveChangesAsync(cancellationToken);

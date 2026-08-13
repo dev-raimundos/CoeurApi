@@ -8,7 +8,7 @@ namespace CoeurApi.Modules.Authentication.Presentation.Controller;
 [ApiController]
 [Route("api/v1/auth")]
 [Tags("Autenticação")]
-public class AuthController(LoginUseCase login) : ControllerBase
+public class AuthHttpOnlyController(LoginUseCase login) : ControllerBase
 {
     [HttpPost("login")]
     [AllowAnonymous]
@@ -19,6 +19,14 @@ public class AuthController(LoginUseCase login) : ControllerBase
     public async Task<ActionResult<AuthResponse>> Login([FromBody] LoginRequest request, CancellationToken cancellationToken)
     {
         var response = await login.ExecuteAsync(request, cancellationToken);
-        return Ok(response);
+        Response.Cookies.Append("token", response.Token, new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.Lax,
+            Domain = ".coeur.app.br",
+            Expires = DateTimeOffset.UtcNow.AddHours(2)
+        });
+        return Ok(response.User);
     }
 }
