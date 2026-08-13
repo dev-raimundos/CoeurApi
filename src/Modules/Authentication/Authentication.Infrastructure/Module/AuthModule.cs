@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using CoeurApi.Modules.Authentication.Application.Abstractions;
 using CoeurApi.Modules.Authentication.Application.UseCases.Login;
+using CoeurApi.Modules.Authentication.Application.UseCases.Me;
 using CoeurApi.Modules.Authentication.Application.Settings;
 using CoeurApi.Modules.Authentication.Infrastructure.Security;
 
@@ -20,6 +21,7 @@ public static class AuthModule
 
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<LoginUseCase>();
+        services.AddScoped<MeUseCase>();
         services.AddValidatorsFromAssemblyContaining<LoginValidator>();
 
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
@@ -34,6 +36,22 @@ public static class AuthModule
                     ValidIssuer = jwtSettings.Issuer,
                     ValidAudience = jwtSettings.Audience,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Secret))
+                };
+
+                // Sem isso, o handler só olha o header Authorization e nunca acha o token —
+                // o login passou a devolvê-lo só via cookie HttpOnly, não mais no corpo da resposta.
+                // Header continua funcionando (ex.: teste manual pelo Swagger) quando não há cookie.
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        if (string.IsNullOrEmpty(context.Token) && context.Request.Cookies.TryGetValue("token", out var token))
+                        {
+                            context.Token = token;
+                        }
+
+                        return Task.CompletedTask;
+                    }
                 };
             });
 

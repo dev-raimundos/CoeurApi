@@ -27,10 +27,32 @@ public class AuthHttpOnlyController(LoginUseCase login, IOptions<CookieSettings>
             HttpOnly = true,
             Secure = true,
             SameSite = SameSiteMode.Lax,
-            Domain = string.IsNullOrWhiteSpace(cookieSettings.Value.Domain) ? null : cookieSettings.Value.Domain,
+            Domain = CookieDomain,
             Expires = DateTimeOffset.UtcNow.AddHours(6)
         });
 
         return Ok(response.User);
     }
+
+    [HttpPost("logout")]
+    [AllowAnonymous]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [EndpointSummary("Logout")]
+    [EndpointDescription("Expira o cookie HttpOnly do token.")]
+    public IActionResult Logout()
+    {
+        Response.Cookies.Delete("token", new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.Lax,
+            Domain = CookieDomain
+        });
+
+        return NoContent();
+    }
+
+    // Domain precisa ser idêntico ao usado no Append pra o browser reconhecer e expirar o mesmo cookie.
+    private string? CookieDomain =>
+        string.IsNullOrWhiteSpace(cookieSettings.Value.Domain) ? null : cookieSettings.Value.Domain;
 }
