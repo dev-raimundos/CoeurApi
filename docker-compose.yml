@@ -23,6 +23,7 @@ services:
       - Jwt__Issuer=${JWT__ISSUER:-coeur-api}
       - Jwt__Audience=${JWT__AUDIENCE:-coeur-api}
       - Jwt__ExpirationHours=${JWT__EXPIRATIONHOURS:-24}
+      - Cookie__Domain=${COOKIE__DOMAIN:-.coeur.app.br}
       - Google__ClientId=${GOOGLE__CLIENT_ID:?GOOGLE__CLIENT_ID is required}
       - AllowedHosts=${ALLOWED_HOSTS:?ALLOWED_HOSTS is required}
       - Cors__AllowedOrigins=${CORS_ALLOWED_ORIGINS:-https://coeur.app.br}

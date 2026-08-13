@@ -16,6 +16,8 @@ public static class AuthModule
         services.Configure<JwtSettings>(configuration.GetSection("Jwt"));
         var jwtSettings = configuration.GetSection("Jwt").Get<JwtSettings>()!;
 
+        services.Configure<CookieSettings>(configuration.GetSection("Cookie"));
+
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<LoginUseCase>();
         services.AddValidatorsFromAssemblyContaining<LoginValidator>();
