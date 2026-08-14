@@ -9,10 +9,7 @@ public class CreateUserUseCase(IUsersRepository repository, IUnitOfWork unitOfWo
 {
     private const string ErrEmailInUse = "Email já está em uso.";
 
-    public async Task<UserResponse> ExecuteAsync(
-        CreateUserRequest request,
-        CancellationToken cancellationToken = default
-    )
+    public async Task<UserResponse> ExecuteAsync(CreateUserRequest request,CancellationToken cancellationToken = default)
     {
         if (await repository.ExistsByEmailAsync(request.Email, cancellationToken))
             throw HttpException.Conflict(ErrEmailInUse);

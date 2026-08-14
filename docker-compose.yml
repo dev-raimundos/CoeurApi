@@ -29,6 +29,11 @@ services:
       - Cors__AllowedOrigins=${CORS_ALLOWED_ORIGINS:-https://coeur.app.br}
       - Database__AutoMigrate=${DATABASE_AUTO_MIGRATE:-true}
     restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 4G
     logging:
       driver: json-file
       options:
